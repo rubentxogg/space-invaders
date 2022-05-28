@@ -1,0 +1,15 @@
+{
+  "name": "space-invaders",
+  "version": "1.0.0",
+  "description": "This app was made following a YouTube tutorial.",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "rubentxogg@hotmail.com",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.7.2"
+  }
+}

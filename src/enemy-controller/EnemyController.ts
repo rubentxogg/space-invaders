@@ -1,4 +1,4 @@
-export default class EnemyController {
+export class EnemyController {
   public canvas: HTMLCanvasElement;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -8,4 +8,4 @@ export default class EnemyController {
   public draw(ctx: CanvasRenderingContext2D) {
     console.log("Enemy Controller class");
   }
-}
+} 

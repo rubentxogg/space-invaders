@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var EnemyController = /** @class */ (function () {
     function EnemyController(canvas) {
         this.canvas = canvas;
@@ -9,4 +7,4 @@ var EnemyController = /** @class */ (function () {
     };
     return EnemyController;
 }());
-exports.default = EnemyController;
+export { EnemyController };

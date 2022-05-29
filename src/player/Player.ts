@@ -26,7 +26,18 @@ export class Player {
 
   public draw(ctx: CanvasRenderingContext2D): void {
     this.move();
+    this.collideWithWalls();
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+  }
+
+  public collideWithWalls(): void {
+    if(this.x < 0) {
+      this.x = 0;
+    }
+
+    if(this.x > this.canvas.width -this.width) {
+      this.x = this.canvas.width - this.width;
+    }
   }
 
   public move(): void {

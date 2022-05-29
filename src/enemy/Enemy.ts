@@ -18,4 +18,9 @@ export class Enemy {
   public draw(ctx: CanvasRenderingContext2D): void {
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
   }
+
+  public move(xVelocity: number, yVelocity: number): void {
+    this.x += xVelocity;
+    this.y += yVelocity;
+  }
 }

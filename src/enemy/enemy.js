@@ -10,6 +10,10 @@ var Enemy = /** @class */ (function () {
     Enemy.prototype.draw = function (ctx) {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     };
+    Enemy.prototype.move = function (xVelocity, yVelocity) {
+        this.x += xVelocity;
+        this.y += yVelocity;
+    };
     return Enemy;
 }());
 export { Enemy };

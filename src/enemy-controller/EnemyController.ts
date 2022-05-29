@@ -1,4 +1,5 @@
 import { Enemy } from "../enemy/enemy.js";
+import MovingDirection from "../moving-direction/MovingDirection.js";
 
 export class EnemyController {
   public canvas: HTMLCanvasElement;
@@ -10,7 +11,15 @@ export class EnemyController {
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [2, 2, 2, 2, 2, 2, 2, 2, 2, 2],
   ];
-  public enemyRows = [];
+  public enemyRows: any = [];
+
+  public currentDirection: number = MovingDirection.right;
+  public xVelocity: number = 0;
+  public yVelocity: number = 0;
+  public defaultXVelocity: number = 1;
+  public defaultYVelocity: number = 1;
+  public moveDownTimerDefault: number = 30;
+  public moveDownTimer: number = this.moveDownTimerDefault;
 
   constructor(canvas: HTMLCanvasElement) {
     this.canvas = canvas;
@@ -18,11 +27,75 @@ export class EnemyController {
   }
 
   public draw(ctx: CanvasRenderingContext2D) {
+    this.decrementMoveDownTimer();
+    this.updateVelocityAndDirection();
     this.drawEnemies(ctx);
+    this.resetMoveDownTimer();
+  }
+
+  public resetMoveDownTimer(): void {
+    if(this.moveDownTimer <= 0) {
+      this.moveDownTimer = this.moveDownTimerDefault;
+    }
+  }
+
+  public decrementMoveDownTimer(): void {
+    if(
+      this.currentDirection === MovingDirection.downLeft ||
+      this.currentDirection === MovingDirection.downRight
+    ) {
+      this.moveDownTimer--;
+    }
+  }
+
+  public updateVelocityAndDirection(): void {
+    for(const enemyRow of this.enemyRows) {
+      if(this.currentDirection === MovingDirection.right) {
+        this.xVelocity = this.defaultXVelocity;
+        this.yVelocity = 0;
+
+        const rightMostEnemy = enemyRow[enemyRow.length - 1];
+
+        if(rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
+          this.currentDirection = MovingDirection.downLeft;
+          break;
+        }
+      } else if(this.currentDirection === MovingDirection.downLeft) {
+        if(this.moveDown(MovingDirection.left)) {
+          break;
+        }
+      } else if(this.currentDirection === MovingDirection.left) {
+        this.xVelocity = -this.defaultXVelocity;
+        this.yVelocity = 0;
+        
+        const leftMostEnemy = enemyRow[0];
+        
+        if(leftMostEnemy.x <= 0) {
+          this.currentDirection = MovingDirection.downRight;
+          break;
+        }
+      } else if(this.currentDirection === MovingDirection.downRight) {
+        if(this.moveDown(MovingDirection.right)) {
+          break;
+        }
+      }
+    }
+  }
+
+  public moveDown(newDirection): boolean {
+    this.xVelocity = 0;
+    this.yVelocity = this.defaultYVelocity;
+
+    if(this.moveDownTimer <= 0) {
+      this.currentDirection = newDirection;
+      return true;
+    }
+    return false;
   }
 
   public drawEnemies(ctx: CanvasRenderingContext2D): void {
     this.enemyRows.flat().forEach((enemy: Enemy) => {
+      enemy.move(this.xVelocity, this.yVelocity);
       enemy.draw(ctx);
     });
   }
@@ -35,6 +108,6 @@ export class EnemyController {
           this.enemyRows[rowIndex].push(new Enemy(enemyIndex * 50, rowIndex * 35, enemyNumber));
         }
       });
-    })
+    });
   }
 } 

@@ -26,7 +26,7 @@ export class EnemyController {
     this.createEnemies();
   }
 
-  public draw(ctx: CanvasRenderingContext2D) {
+  public draw(ctx: CanvasRenderingContext2D): void {
     this.decrementMoveDownTimer();
     this.updateVelocityAndDirection();
     this.drawEnemies(ctx);

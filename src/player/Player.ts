@@ -1,3 +1,5 @@
+import { BulletController } from "../bullet-controller/BulletController.js";
+
 export class Player {
   public canvas: HTMLCanvasElement;
   public velocity: number;
@@ -8,10 +10,13 @@ export class Player {
   public image: HTMLImageElement;
   public rightPressed: boolean = false;
   public leftPressed: boolean = false;
+  public shootPressed: boolean = false;
+  public bulletController: BulletController;
 
-  constructor(canvas: HTMLCanvasElement, velocity: number) {
+  constructor(canvas: HTMLCanvasElement, velocity: number, bulletController: BulletController) {
     this.canvas = canvas;
     this.velocity = velocity;
+    this.bulletController = bulletController;
 
     this.x = this.canvas.width / 2;
     this.y = this.canvas.height - 75;
@@ -25,6 +30,10 @@ export class Player {
   }
 
   public draw(ctx: CanvasRenderingContext2D): void {
+    if (this.shootPressed) {
+      this.bulletController.shoot(this.x + this.width / 2, this.y, 4, 10);
+    }
+
     this.move();
     this.collideWithWalls();
     ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
@@ -56,6 +65,10 @@ export class Player {
     if(event.code === 'ArrowLeft') {
       this.leftPressed = true;
     }
+
+    if(event.code === "Space") {
+      this.shootPressed = true;
+    }
   }
 
   public keyup = (event: { code: string; }): void => {
@@ -65,6 +78,10 @@ export class Player {
 
     if(event.code === 'ArrowLeft') {
       this.leftPressed = false;
+    }
+
+    if(event.code === "Space") {
+      this.shootPressed = false;
     }
   }
 }

@@ -1,14 +1,18 @@
 var Player = /** @class */ (function () {
-    function Player(canvas, velocity) {
+    function Player(canvas, velocity, bulletController) {
         var _this = this;
         this.rightPressed = false;
         this.leftPressed = false;
+        this.shootPressed = false;
         this.keydown = function (event) {
             if (event.code === 'ArrowRight') {
                 _this.rightPressed = true;
             }
             if (event.code === 'ArrowLeft') {
                 _this.leftPressed = true;
+            }
+            if (event.code === "Space") {
+                _this.shootPressed = true;
             }
         };
         this.keyup = function (event) {
@@ -18,9 +22,13 @@ var Player = /** @class */ (function () {
             if (event.code === 'ArrowLeft') {
                 _this.leftPressed = false;
             }
+            if (event.code === "Space") {
+                _this.shootPressed = false;
+            }
         };
         this.canvas = canvas;
         this.velocity = velocity;
+        this.bulletController = bulletController;
         this.x = this.canvas.width / 2;
         this.y = this.canvas.height - 75;
         this.width = 50;
@@ -31,6 +39,9 @@ var Player = /** @class */ (function () {
         document.addEventListener("keyup", this.keyup);
     }
     Player.prototype.draw = function (ctx) {
+        if (this.shootPressed) {
+            this.bulletController.shoot(this.x + this.width / 2, this.y, 4, 10);
+        }
         this.move();
         this.collideWithWalls();
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);

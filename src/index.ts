@@ -12,7 +12,8 @@ const background = new Image(canvas.width, canvas.height);
 background.src = "/src/assets/images/space.png";
 
 const playerBulletController = new BulletController(canvas, 10, "red", true);
-const enemyController = new EnemyController(canvas);
+const enemyBulletController = new BulletController(canvas, 4, 'white', false);
+const enemyController = new EnemyController(canvas, enemyBulletController);
 const player = new Player(canvas, 3, playerBulletController);
 
 function game() {
@@ -20,6 +21,7 @@ function game() {
   enemyController.draw(ctx);
   player.draw(ctx);
   playerBulletController.draw(ctx);
+  enemyBulletController.draw(ctx);
 }
 
 setInterval(game, 1000/60);

@@ -1,7 +1,7 @@
 import { Enemy } from "../enemy/enemy.js";
 import MovingDirection from "../moving-direction/MovingDirection.js";
 var EnemyController = /** @class */ (function () {
-    function EnemyController(canvas) {
+    function EnemyController(canvas, enemyBulletController) {
         this.enemyMap = [
             [0, 1, 1, 1, 0, 0, 1, 1, 1, 0],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -18,7 +18,10 @@ var EnemyController = /** @class */ (function () {
         this.defaultYVelocity = 1;
         this.moveDownTimerDefault = 30;
         this.moveDownTimer = this.moveDownTimerDefault;
+        this.fireBulletTimerDefault = 100;
+        this.fireBulletTimer = this.fireBulletTimerDefault;
         this.canvas = canvas;
+        this.enemyBulletController = enemyBulletController;
         this.createEnemies();
     }
     EnemyController.prototype.draw = function (ctx) {
@@ -26,6 +29,17 @@ var EnemyController = /** @class */ (function () {
         this.updateVelocityAndDirection();
         this.drawEnemies(ctx);
         this.resetMoveDownTimer();
+        this.fireBullet();
+    };
+    EnemyController.prototype.fireBullet = function () {
+        this.fireBulletTimer--;
+        if (this.fireBulletTimer <= 0) {
+            this.fireBulletTimer = this.fireBulletTimerDefault;
+            var allEnemies = this.enemyRows.flat();
+            var enemyIndex = Math.floor(Math.random() * allEnemies.length);
+            var enemy = allEnemies[enemyIndex];
+            this.enemyBulletController.shoot(enemy.x, enemy.y, -3);
+        }
     };
     EnemyController.prototype.resetMoveDownTimer = function () {
         if (this.moveDownTimer <= 0) {

@@ -31,6 +31,18 @@ export class BulletController {
     }
   }
 
+  public collideWith(sprite): boolean {
+    const bulletThatHitSpriteIndex = this.bullets.findIndex(
+      bullet => bullet.collideWith(sprite)
+    );
+
+    if(bulletThatHitSpriteIndex >= 0) {
+      this.bullets.splice(bulletThatHitSpriteIndex, 1);
+      return true;
+    }
+    return false;
+  }
+
   public shoot(x: number, y: number, velocity: number, timeTillNextBulletAllowed: number = 0): void {
     if(
       this.timeTillNextBulletAllowed <= 0 && 

@@ -24,10 +24,16 @@ export class EnemyController {
   public enemyBulletController: BulletController;
   public fireBulletTimerDefault: number = 100;
   public fireBulletTimer: number = this.fireBulletTimerDefault;
+  public playerBulletController: BulletController;
+  public enemyDeathSound: HTMLAudioElement;
 
-  constructor(canvas: HTMLCanvasElement, enemyBulletController: BulletController) {
+  constructor(canvas: HTMLCanvasElement, enemyBulletController: BulletController, playerBulletController: BulletController) {
     this.canvas = canvas;
     this.enemyBulletController = enemyBulletController;
+    this.playerBulletController = playerBulletController;
+
+    this.enemyDeathSound = new Audio("/src/assets/sounds/enemy-death.wav");
+    this.enemyDeathSound.volume = 0.1;
 
     this.createEnemies();
   }
@@ -35,9 +41,24 @@ export class EnemyController {
   public draw(ctx: CanvasRenderingContext2D): void {
     this.decrementMoveDownTimer();
     this.updateVelocityAndDirection();
+    this.collisionDetection();
     this.drawEnemies(ctx);
     this.resetMoveDownTimer();
     this.fireBullet();
+  }
+
+  public collisionDetection(): void {
+    this.enemyRows.forEach((enemyRow) => {
+      enemyRow.forEach((enemy, enemyIndex) => {
+        if(this.playerBulletController.collideWith(enemy)) {
+          this.enemyDeathSound.currentTime = 0;
+          this.enemyDeathSound.play();
+          enemyRow.splice(enemyIndex, 1);
+        }
+      });
+    });
+
+    this.enemyRows = this.enemyRows.filter(enemyRow => enemyRow.length > 0);
   }
 
   public fireBullet(): void {

@@ -18,6 +18,14 @@ var BulletController = /** @class */ (function () {
             this.timeTillNextBulletAllowed--;
         }
     };
+    BulletController.prototype.collideWith = function (sprite) {
+        var bulletThatHitSpriteIndex = this.bullets.findIndex(function (bullet) { return bullet.collideWith(sprite); });
+        if (bulletThatHitSpriteIndex >= 0) {
+            this.bullets.splice(bulletThatHitSpriteIndex, 1);
+            return true;
+        }
+        return false;
+    };
     BulletController.prototype.shoot = function (x, y, velocity, timeTillNextBulletAllowed) {
         if (timeTillNextBulletAllowed === void 0) { timeTillNextBulletAllowed = 0; }
         if (this.timeTillNextBulletAllowed <= 0 &&

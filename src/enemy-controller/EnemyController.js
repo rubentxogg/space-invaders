@@ -1,7 +1,7 @@
 import { Enemy } from "../enemy/enemy.js";
 import MovingDirection from "../moving-direction/MovingDirection.js";
 var EnemyController = /** @class */ (function () {
-    function EnemyController(canvas, enemyBulletController) {
+    function EnemyController(canvas, enemyBulletController, playerBulletController) {
         this.enemyMap = [
             [0, 1, 1, 1, 0, 0, 1, 1, 1, 0],
             [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -22,14 +22,31 @@ var EnemyController = /** @class */ (function () {
         this.fireBulletTimer = this.fireBulletTimerDefault;
         this.canvas = canvas;
         this.enemyBulletController = enemyBulletController;
+        this.playerBulletController = playerBulletController;
+        this.enemyDeathSound = new Audio("/src/assets/sounds/enemy-death.wav");
+        this.enemyDeathSound.volume = 0.1;
         this.createEnemies();
     }
     EnemyController.prototype.draw = function (ctx) {
         this.decrementMoveDownTimer();
         this.updateVelocityAndDirection();
+        this.collisionDetection();
         this.drawEnemies(ctx);
         this.resetMoveDownTimer();
         this.fireBullet();
+    };
+    EnemyController.prototype.collisionDetection = function () {
+        var _this = this;
+        this.enemyRows.forEach(function (enemyRow) {
+            enemyRow.forEach(function (enemy, enemyIndex) {
+                if (_this.playerBulletController.collideWith(enemy)) {
+                    _this.enemyDeathSound.currentTime = 0;
+                    _this.enemyDeathSound.play();
+                    enemyRow.splice(enemyIndex, 1);
+                }
+            });
+        });
+        this.enemyRows = this.enemyRows.filter(function (enemyRow) { return enemyRow.length > 0; });
     };
     EnemyController.prototype.fireBullet = function () {
         this.fireBulletTimer--;

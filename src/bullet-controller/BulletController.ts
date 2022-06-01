@@ -1,4 +1,5 @@
 import { Bullet } from "../bullet/Bullet.js";
+import { Player } from "../player/Player.js";
 
 export class BulletController {
   public canvas: HTMLCanvasElement;
@@ -31,7 +32,7 @@ export class BulletController {
     }
   }
 
-  public collideWith(sprite): boolean {
+  public collideWith(sprite: Player): boolean {
     const bulletThatHitSpriteIndex = this.bullets.findIndex(
       bullet => bullet.collideWith(sprite)
     );

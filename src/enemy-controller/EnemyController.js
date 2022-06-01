@@ -18,7 +18,7 @@ var EnemyController = /** @class */ (function () {
         this.defaultYVelocity = 1;
         this.moveDownTimerDefault = 30;
         this.moveDownTimer = this.moveDownTimerDefault;
-        this.fireBulletTimerDefault = 100;
+        this.fireBulletTimerDefault = 50;
         this.fireBulletTimer = this.fireBulletTimerDefault;
         this.canvas = canvas;
         this.enemyBulletController = enemyBulletController;
@@ -55,7 +55,7 @@ var EnemyController = /** @class */ (function () {
             var allEnemies = this.enemyRows.flat();
             var enemyIndex = Math.floor(Math.random() * allEnemies.length);
             var enemy = allEnemies[enemyIndex];
-            this.enemyBulletController.shoot(enemy.x, enemy.y, -3);
+            this.enemyBulletController.shoot(enemy.x, enemy.y, -5);
         }
     };
     EnemyController.prototype.resetMoveDownTimer = function () {

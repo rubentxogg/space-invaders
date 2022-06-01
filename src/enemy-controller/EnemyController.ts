@@ -23,12 +23,16 @@ export class EnemyController {
   public moveDownTimerDefault: number = 30;
   public moveDownTimer: number = this.moveDownTimerDefault;
   public enemyBulletController: BulletController;
-  public fireBulletTimerDefault: number = 100;
+  public fireBulletTimerDefault: number = 50;
   public fireBulletTimer: number = this.fireBulletTimerDefault;
   public playerBulletController: BulletController;
   public enemyDeathSound: HTMLAudioElement;
 
-  constructor(canvas: HTMLCanvasElement, enemyBulletController: BulletController, playerBulletController: BulletController) {
+  constructor(
+    canvas: HTMLCanvasElement,
+    enemyBulletController: BulletController,
+    playerBulletController: BulletController
+  ) {
     this.canvas = canvas;
     this.enemyBulletController = enemyBulletController;
     this.playerBulletController = playerBulletController;
@@ -51,7 +55,7 @@ export class EnemyController {
   public collisionDetection(): void {
     this.enemyRows.forEach((enemyRow) => {
       enemyRow.forEach((enemy, enemyIndex) => {
-        if(this.playerBulletController.collideWith(enemy)) {
+        if (this.playerBulletController.collideWith(enemy)) {
           this.enemyDeathSound.currentTime = 0;
           this.enemyDeathSound.play();
           enemyRow.splice(enemyIndex, 1);
@@ -59,29 +63,29 @@ export class EnemyController {
       });
     });
 
-    this.enemyRows = this.enemyRows.filter(enemyRow => enemyRow.length > 0);
+    this.enemyRows = this.enemyRows.filter((enemyRow) => enemyRow.length > 0);
   }
 
   public fireBullet(): void {
     this.fireBulletTimer--;
 
-    if(this.fireBulletTimer <= 0) {
+    if (this.fireBulletTimer <= 0) {
       this.fireBulletTimer = this.fireBulletTimerDefault;
       const allEnemies = this.enemyRows.flat();
       const enemyIndex = Math.floor(Math.random() * allEnemies.length);
       const enemy = allEnemies[enemyIndex];
-      this.enemyBulletController.shoot(enemy.x, enemy.y, -3);
+      this.enemyBulletController.shoot(enemy.x, enemy.y, -5);
     }
   }
 
   public resetMoveDownTimer(): void {
-    if(this.moveDownTimer <= 0) {
+    if (this.moveDownTimer <= 0) {
       this.moveDownTimer = this.moveDownTimerDefault;
     }
   }
 
   public decrementMoveDownTimer(): void {
-    if(
+    if (
       this.currentDirection === MovingDirection.downLeft ||
       this.currentDirection === MovingDirection.downRight
     ) {
@@ -90,44 +94,44 @@ export class EnemyController {
   }
 
   public updateVelocityAndDirection(): void {
-    for(const enemyRow of this.enemyRows) {
-      if(this.currentDirection === MovingDirection.right) {
+    for (const enemyRow of this.enemyRows) {
+      if (this.currentDirection === MovingDirection.right) {
         this.xVelocity = this.defaultXVelocity;
         this.yVelocity = 0;
 
         const rightMostEnemy = enemyRow[enemyRow.length - 1];
 
-        if(rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
+        if (rightMostEnemy.x + rightMostEnemy.width >= this.canvas.width) {
           this.currentDirection = MovingDirection.downLeft;
           break;
         }
-      } else if(this.currentDirection === MovingDirection.downLeft) {
-        if(this.moveDown(MovingDirection.left)) {
+      } else if (this.currentDirection === MovingDirection.downLeft) {
+        if (this.moveDown(MovingDirection.left)) {
           break;
         }
-      } else if(this.currentDirection === MovingDirection.left) {
+      } else if (this.currentDirection === MovingDirection.left) {
         this.xVelocity = -this.defaultXVelocity;
         this.yVelocity = 0;
-        
+
         const leftMostEnemy = enemyRow[0];
-        
-        if(leftMostEnemy.x <= 0) {
+
+        if (leftMostEnemy.x <= 0) {
           this.currentDirection = MovingDirection.downRight;
           break;
         }
-      } else if(this.currentDirection === MovingDirection.downRight) {
-        if(this.moveDown(MovingDirection.right)) {
+      } else if (this.currentDirection === MovingDirection.downRight) {
+        if (this.moveDown(MovingDirection.right)) {
           break;
         }
       }
     }
   }
 
-  public moveDown(newDirection): boolean {
+  public moveDown(newDirection: number): boolean {
     this.xVelocity = 0;
     this.yVelocity = this.defaultYVelocity;
 
-    if(this.moveDownTimer <= 0) {
+    if (this.moveDownTimer <= 0) {
       this.currentDirection = newDirection;
       return true;
     }
@@ -146,13 +150,15 @@ export class EnemyController {
       this.enemyRows[rowIndex] = [];
       row.forEach((enemyNumber, enemyIndex) => {
         if (enemyNumber > 0) {
-          this.enemyRows[rowIndex].push(new Enemy(enemyIndex * 50, rowIndex * 35, enemyNumber));
+          this.enemyRows[rowIndex].push(
+            new Enemy(enemyIndex * 50, rowIndex * 35, enemyNumber)
+          );
         }
       });
     });
   }
 
   public collideWith(sprite: Player) {
-    return this.enemyRows.flat().some(enemy => enemy.collideWith(sprite));
+    return this.enemyRows.flat().some((enemy) => enemy.collideWith(sprite));
   }
-} 
+}

@@ -1,6 +1,7 @@
 import { BulletController } from "../bullet-controller/BulletController.js";
 import { Enemy } from "../enemy/enemy.js";
 import MovingDirection from "../moving-direction/MovingDirection.js";
+import { Player } from "../player/Player.js";
 
 export class EnemyController {
   public canvas: HTMLCanvasElement;
@@ -144,10 +145,14 @@ export class EnemyController {
     this.enemyMap.forEach((row, rowIndex) => {
       this.enemyRows[rowIndex] = [];
       row.forEach((enemyNumber, enemyIndex) => {
-        if(enemyNumber > 0) {
+        if (enemyNumber > 0) {
           this.enemyRows[rowIndex].push(new Enemy(enemyIndex * 50, rowIndex * 35, enemyNumber));
         }
       });
     });
+  }
+
+  public collideWith(sprite: Player) {
+    return this.enemyRows.flat().some(enemy => enemy.collideWith(sprite));
   }
 } 

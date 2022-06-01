@@ -1,3 +1,5 @@
+import { Player } from "../player/Player.js";
+
 export class Bullet {
   public canvas: HTMLCanvasElement;
   public x: number;
@@ -25,7 +27,7 @@ export class Bullet {
     ctx.fillRect(this.x, this.y, this.width, this.height);
   }
 
-  public collideWith(sprite): boolean {
+  public collideWith(sprite: Player): boolean {
     if(
       this.x + this.width > sprite.x &&
       this.x < sprite.x + sprite.width &&

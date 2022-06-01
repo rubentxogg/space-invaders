@@ -1,3 +1,5 @@
+import { Player } from "../player/Player.js";
+
 export class Enemy {
   public x: number;
   public y: number;
@@ -22,5 +24,18 @@ export class Enemy {
   public move(xVelocity: number, yVelocity: number): void {
     this.x += xVelocity;
     this.y += yVelocity;
+  }
+
+  public collideWith(sprite: Player): boolean {
+    if (
+      this.x + this.width > sprite.x &&
+      this.x < sprite.x + sprite.width &&
+      this.y + this.height > sprite.y &&
+      this.y < sprite.y + sprite.height
+    ) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -14,6 +14,17 @@ var Enemy = /** @class */ (function () {
         this.x += xVelocity;
         this.y += yVelocity;
     };
+    Enemy.prototype.collideWith = function (sprite) {
+        if (this.x + this.width > sprite.x &&
+            this.x < sprite.x + sprite.width &&
+            this.y + this.height > sprite.y &&
+            this.y < sprite.y + sprite.height) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    };
     return Enemy;
 }());
 export { Enemy };

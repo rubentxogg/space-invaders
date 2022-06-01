@@ -129,6 +129,9 @@ var EnemyController = /** @class */ (function () {
             });
         });
     };
+    EnemyController.prototype.collideWith = function (sprite) {
+        return this.enemyRows.flat().some(function (enemy) { return enemy.collideWith(sprite); });
+    };
     return EnemyController;
 }());
 export { EnemyController };
